@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>글작성</title>
+</head>
+<body>
+    <div class="write_form">
+        <form id="writeAction" action="write" method="post">
+            <input type="text" class="inputSubject" id="addContentSubject" name="addContentSubject" placeholder="제목">
+            <input type="text" class="inputWriter" id="addContentWriter" name="addContentWriter" placeholder="작성자">
+            <textarea class="textContents" id="addContents" name="addContents" rows="20" cols="80"></textarea>
+            <br/>
+            <input type="submit" value="send">
+
+        </form>
+
+        <div id = "new" class="addBtngroup">
+            <button id = "btnCancel" onclick="location.href='/boards'">Cancel</button>
+        </div>
+    </div>
+    <script>
+
+    </script>
+
+</body>
+</html>

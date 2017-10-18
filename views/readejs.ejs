@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>글 읽기</title>
+
+</head>
+<body>
+<h1>글 읽기</h1>
+<table>
+
+    <% for(var i =0; i<Data.length; i++){%>
+        <tr class="row" id = "<%= Data[i]._id %>" onclick= "location.href='/boards/read/<%= Data[i]._id%>'">
+
+            <td>
+                <%= i+1 %>
+            </td>
+            <td>
+                <%= Data[i].title %>
+            </td>
+            <td>
+                <%= Data[i].author %>
+            </td>
+        </tr>
+    <% } %>
+
+
+
+
+</table>
+ <%= Data.title %>
+
+<script type="text/javascript">
+    function clickTrEvent(trObj){
+      alert(trObj.id);
+    }
+</script>
+</body>
+</html>
