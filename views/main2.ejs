@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <link rel = "stylesheet" type="text/css" href="/indexcss.css">
+
+</head>
+<body>
+<h1>게시판</h1>
+<table>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+    </tr>
+    <% for(var i =0; i<Data.length; i++){%>
+    <tr class="row" id = "<%= Data[i]._id %>" onclick= "location.href='/boards/read/<%= Data[i]._id%>'">
+
+        <td>
+            <%= i+1 %>
+        </td>
+        <td>
+            <%= Data[i].title %>
+        </td>
+        <td>
+            <%= Data[i].author %>
+        </td>
+    </tr>
+    <% } %>
+
+
+    <button id="goWrite" onclick="location.href='/boards/write'">글쓰기</button>
+</table>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

@@ -20,6 +20,23 @@ router.get('/', function(req, res){
 
 });
 
+/*router.get('/ajax', function(req, res){
+  console.log('ajax 요청 받음');
+  BoardContents.find({}).exec((err,results) => {
+    if(err) throw err;
+    res.render('index.html',results);
+  })
+});
+*/
+router.get('/dataGet', function(req,res){
+  console.log('ajax 요청 받음(dataget)');
+  BoardContents.find({}).exec((err,results) => {
+    if(err) throw err;
+    res.send(results);
+  })
+
+});
+
 
 router.get('/read/:_id', function(req, res){
   BoardContents.find({_id:req.params._id}).exec((err,result) =>{
@@ -49,6 +66,19 @@ router.post('/write', (req,res) =>{
     }
     return res.redirect('/boards');
   });
+});
+
+router.get('/ajax',function(req, res){
+  res.render('index.html');
+});
+
+router.get('/ajax/contentGet', function(req,res){
+  console.log('요청받음');
+  BoardContents.find({}).exec((err,results) => {
+    if(err) throw err;
+    //console.log(results);
+    res.json(results);
+  })
 });
 
 module.exports = router;

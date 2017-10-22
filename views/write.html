@@ -11,7 +11,8 @@
             <input type="text" class="inputWriter" id="addContentWriter" name="addContentWriter" placeholder="작성자">
             <textarea class="textContents" id="addContents" name="addContents" rows="20" cols="80"></textarea>
             <br/>
-            <input type="submit" value="send">
+            <input type="submit" id="sendbtn" value="send" onClick="Sendbtn()" >
+
 
         </form>
 
@@ -20,6 +21,31 @@
         </div>
     </div>
     <script>
+        let obj;
+
+        let Sendbtn = function(){
+          let httpRequest;
+          if(window.XMLHttpRequest){ //Chrome, Safari..
+            httpRequest = new XMLHttpRequest();
+          }
+
+          httpRequest.onreadystatechange = function(){
+            if(httpRequest.readyState === 4){
+              /* 서버에 대한 요청 응답 처리 상태 : readyState */
+              if(httpRequest.status === 200){
+                /* 서버 응답 코드 : status */
+                //attach.innerHTML = httpRequest.responseText;
+                obj = JSON.parse(httpRequest.responseText);
+
+                console.log(obj);
+              }
+            }
+          };
+
+          //console.log(element);
+          //httpRequest.open('GET', '/dataGet', true);
+          httpRequest.send();
+        }
 
     </script>
 
