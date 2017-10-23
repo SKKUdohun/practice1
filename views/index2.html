@@ -6,20 +6,19 @@
     <link rel = "stylesheet" type="text/css" href="/indexcss.css">
 
 </head>
+
 <body>
 <h1>게시판</h1>
 <table>
     <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>작성자</th>
+
     </tr>
+
+
     <div id="content">
 
     </div>
-    <div id = "button">
-        <button onclick="getContent()">내용불러오기</button>
-    </div>
+
 
     <!---
 
@@ -27,89 +26,52 @@
 </table>
 <script>
     //const attach = document.getElementById('content');
+
     let obj;
-
-    function open() {
-       //readDoc();
-        console.log("new page");
-        window.onload = function () {
-            let httpRequest;
-            if (window.XMLHttpRequest) { //Chrome, Safari..
-                httpRequest = new XMLHttpRequest();
-            }
-
-            httpRequest.onreadystatechange = function () {
-                var local = document.getElementsByTagName("table")[0].getElementsByTagName("tbody")[0];
-                local.setAttribute('id', 'root');
-
-                if (httpRequest.readyState === 4) {
-                    /* 서버에 대한 요청 응답 처리 상태 : readyState */
-                    if (httpRequest.status === 200) {
-                        /* 서버 응답 코드 : status */
-                        //attach.innerHTML = httpRequest.responseText;
-                        obj = JSON.parse(httpRequest.responseText);
-
-                        var elements = document.getElementsByClassName('row');
-                        //elements.setAttribute('id', 'elem');
-                        while (elements.length > 0) {
-                            elements[0].parentNode.removeChild(elements[0]);
-                        }
-
-                        for (i = 0; i < obj.length; i++) {
-
-                            var tr = document.createElement("tr");
-                            tr.setAttribute('class', 'row');
-                            tr.setAttribute('id', obj[i]._id);
-
-                            var td1 = document.createElement("td");
-                            td1.appendChild(document.createTextNode(i + 1));
-                            var td2 = document.createElement("td");
-                            td2.appendChild(document.createTextNode(obj[i].title));
-                            var td3 = document.createElement("td");
-                            td3.appendChild(document.createTextNode(obj[i].author));
-
-                            tr.appendChild(td1);
-                            tr.appendChild(td2);
-                            tr.appendChild(td3);
-
-                            console.log(obj[i]);
-                            local.appendChild(tr);
-                            /*tr.onclick=function(){
-                            console.log(this.id);
-                           //document.location = '/boards/read:'+this._id;
-                          }*/
-                            tr.onclick = function () {
-                                console.log(this.id);
-                                readDoc();
-                                sendAjax('/boards/ajax/read/' + this.id);
-                            }
-                        }
-                    }
-                }
-            }
-            httpRequest.open('GET', '/boards/ajax/contentGet', true);
-            httpRequest.send();
-            //console.log(element);
-        }
-    }
     open();
 
 
+    function open() {
+       //readDoc();
+        console.log("open호출");
+        window.onload = function () {
+          getContent();
+        }
+    }
+
+    function writeDoc(url){
+     //loacl.appendChild(temp);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status ==200){
+          console.log(this.responseText);
+        }
+      };
+      xhttp.open("POST", url);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send(data);
+    }
+
     function readDoc() {
 
+        console.log("readDoc 호출됨");
 
-        var but = document.getElementById('button');
-        but.parentNode.removeChild(but);
+        //var but = document.getElementById('button');
+        //but.parentNode.removeChild(but);
         var cell= document.getElementById("root");
         while(cell.hasChildNodes()){
             cell.removeChild(cell.firstChild);
         }
-        //console.log(id);
-
+        var cont = document.getElementById("content");
+        while(cont.hasChildNodes()){
+          cont.removeChild(cont.firstChild);
+        }
     }
-    function sendAjax(url, data){
+
+
+    function sendAjax(url){
         var data;
-        data = JSON.stringify(data);
+        //data = JSON.stringify(data);
         var result;
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url);
@@ -117,7 +79,7 @@
 
         //console.log(xhr.responseText);
         //result = JSON.parse(xhr.responseText);
-        xhr.send(data);
+        xhr.send();
         //console.log(result);
 
         xhr.addEventListener('load', function(){
@@ -126,85 +88,167 @@
            var newDiv =null;
 
            newDiv = document.createElement("div");
+           newDiv.setAttribute('id','diiv');
            newDiv.innerHTML = "제목: "+result[0].title + "<br/>" + "내용: "+result[0].contents + "<br/>"
                + "작성자: " + result[0].author;
            my_div = document.getElementById("content");
            document.body.insertBefore(newDiv, my_div);
            //alert(result[0]._id);
             var btn = document.createElement("BUTTON");
-            var t = document.createTextNode("확인");
+            var t = document.createTextNode("확인~");
             btn.appendChild(t);
             document.body.appendChild(btn);
             btn.onclick = function(){
                 //alert('돌아갈래~');
+                //readDoc();
+                var delnode = document.getElementById('diiv');
+                delnode.parentNode.removeChild(delnode);
+                btn.parentNode.removeChild(btn);
                 //open();
                 getContent();
             }
         })
     };
 
+
     let getContent = function(){
-        let httpRequest;
-        if(window.XMLHttpRequest){ //Chrome, Safari..
-            httpRequest = new XMLHttpRequest();
-        }
+      console.log("getContent 호출");
+      //readDoc();
 
-        httpRequest.onreadystatechange = function(){
-            var local = document.getElementsByTagName("table")[0].getElementsByTagName("tbody")[0];
-            local.setAttribute('id', 'root');
+      let httpRequest;
+      if (window.XMLHttpRequest) { //Chrome, Safari..
+        httpRequest = new XMLHttpRequest();
+      }
 
-            if(httpRequest.readyState === 4) {
-                /* 서버에 대한 요청 응답 처리 상태 : readyState */
-                if (httpRequest.status === 200) {
-                    /* 서버 응답 코드 : status */
-                    //attach.innerHTML = httpRequest.responseText;
-                    obj = JSON.parse(httpRequest.responseText);
+      httpRequest.onreadystatechange = function () {
+        var local = document.getElementsByTagName("table")[0].getElementsByTagName("tbody")[0];
+        local.setAttribute('id', 'root');
 
-                    var elements = document.getElementsByClassName('row');
-                    //elements.setAttribute('id', 'elem');
-                    while(elements.length>0){
-                        elements[0].parentNode.removeChild(elements[0]);
-                    }
+        if (httpRequest.readyState === 4) {
+          // 서버에 대한 요청 응답 처리 상태 : readyState
+          if (httpRequest.status === 200) {
+            // 서버 응답 코드 : status
+            //attach.innerHTML = httpRequest.responseText;
+            obj = JSON.parse(httpRequest.responseText);
 
-                    for ( i = 0; i < obj.length; i++) {
-
-                        var tr = document.createElement("tr");
-                        tr.setAttribute('class', 'row');
-                        tr.setAttribute('id', obj[i]._id);
-
-                        var td1 = document.createElement("td");
-                        td1.appendChild(document.createTextNode(i + 1));
-                        var td2 = document.createElement("td");
-                        td2.appendChild(document.createTextNode(obj[i].title));
-                        var td3 = document.createElement("td");
-                        td3.appendChild(document.createTextNode(obj[i].author));
-
-                        tr.appendChild(td1);
-                        tr.appendChild(td2);
-                        tr.appendChild(td3);
-
-                        console.log(obj[i]);
-                        local.appendChild(tr);
-                        /*tr.onclick=function(){
-                        console.log(this.id);
-                       //document.location = '/boards/read:'+this._id;
-                      }*/
-                        tr.onclick=function(){
-                            readDoc(this.id);
-                            var but = document.getElementById('button');
-                            but.parentNode.removeChild(but);
-                        }
-                    }
-
-                }
+            var elements = document.getElementsByClassName('row');
+            //elements.setAttribute('id', 'elem');
+            while (elements.length > 0) {
+              elements[0].parentNode.removeChild(elements[0]);
             }
 
+            var th1 = document.createElement("th");
+            th1.appendChild(document.createTextNode("번호"));
+
+            var th2 = document.createElement("th");
+            th2.appendChild(document.createTextNode("제목"));
+
+            var th3 = document.createElement("th");
+            th3.appendChild(document.createTextNode("작성자"));
+            local.appendChild(th1);
+            local.appendChild(th2);
+            local.appendChild(th3);
+            for (i = 0; i < obj.length; i++) {
+
+              var tr = document.createElement("tr");
+              tr.setAttribute('class', 'row');
+              tr.setAttribute('id', obj[i]._id);
+
+              var td1 = document.createElement("td");
+              td1.appendChild(document.createTextNode(i + 1));
+              var td2 = document.createElement("td");
+              td2.appendChild(document.createTextNode(obj[i].title));
+              var td3 = document.createElement("td");
+              td3.appendChild(document.createTextNode(obj[i].author));
+
+              tr.appendChild(td1);
+              tr.appendChild(td2);
+              tr.appendChild(td3);
+
+              console.log(obj[i]);
+              local.appendChild(tr);
+              //tr.onclick=function(){
+              //console.log(this.id);
+              //document.location = '/boards/read:'+this._id;
+              //}
+              tr.onclick = function () {
+                console.log(this.id);
+                readDoc();
+                sendAjax('/boards/ajax/read/' + this.id);
+              }
+
+            }
+            var write = document.createElement("button");
+            write.appendChild(document.createTextNode("글쓰기"));
+            local.appendChild(write);
+            write.onclick = function(){
+              readDoc();
+              //alert("글쓰기 누름!");
+              //var data = {'name': 'djhdjd', 'age': '234'};
+              var form = document.createElement("form");
+              form.method= "POST";
+
+              var input_title = document.createElement("INPUT");
+              input_title.setAttribute('type', 'text');
+              input_title.setAttribute('placeholder', '제목');
+              input_title.setAttribute('id','title');
+    //          local.appendChild(input_title);
+              //temp.setAttribute('id','demo');
+              //temp.appendChild(document.createTextNode("쳌쳌쳌"));
+              var lb1 = document.createElement("br");
+              var lb2 = document.createElement("br");
+              var lb3 = document.createElement("br");
+              var lb4 = document.createElement("br");
+              local.appendChild(lb1);
+
+              var input_author = document.createElement("INPUT");
+              input_author.setAttribute('type', 'text');
+              input_author.setAttribute('placeholder', '작성자');
+  //            local.appendChild(input_author);
+
+              local.appendChild(lb2);
+              var input_content = document.createElement("INPUT");
+              input_content.setAttribute('type', 'text');
+              input_content.setAttribute('placeholder', '내용');
+              input_content.setAttribute('size', '50');
+              input_content.setAttribute('style', 'height:100px');
+
+//              local.appendChild(input_content);
+
+              form.appendChild(input_title);
+              form.appendChild(input_author);
+              form.appendChild(input_content);
+              local.appendChild(form);
+              local.appendChild(lb3);
+
+
+
+              var submit = document.createElement("button");
+              submit.appendChild(document.createTextNode("전송"));
+              local.appendChild(submit);
+
+
+
+              var title = document.getElementById('title').value;
+              submit.onclick = function(){
+                console.log(title);
+              };
+              local.appendChild(lb4);
+              var cancel = document.createElement("button");
+              cancel.appendChild(document.createTextNode("취소"));
+              local.appendChild(cancel);
+              cancel.onclick = function(){
+                alert('cancel 누름');
+              };
+
+
+              writeDoc( '/boards/ajax/write');
+            }
+          }
         }
-        httpRequest.open('GET', '/boards/ajax/contentGet', true);
-        httpRequest.send();
-
-
-        //console.log(element);
+      }
+      httpRequest.open('GET', '/boards/ajax/contentGet', true);
+      httpRequest.send();
     }
 
 </script>

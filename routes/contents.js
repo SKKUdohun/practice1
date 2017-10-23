@@ -82,13 +82,22 @@ router.get('/ajax/contentGet', function(req,res){
 });
 
 router.post('/ajax/read/:_id', function(req, res){
-  console.log('ajax 글읽기 요청')
+  console.log('ajax 글읽기 요청');
     BoardContents.find({_id:req.params._id}).exec((err,result) =>{
         console.log('체크'+result);
         if(err) throw err;
 
         res.json(result);
     });
+});
+
+router.post('/ajax/write', function(req, res){
+  console.log('ajax 글쓰기 요청');
+  var data = {
+    'name' : 'nanana',
+    'age' : '1234'
+  }
+  res.json(data);
 });
 
 module.exports = router;
