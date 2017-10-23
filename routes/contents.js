@@ -20,14 +20,6 @@ router.get('/', function(req, res){
 
 });
 
-/*router.get('/ajax', function(req, res){
-  console.log('ajax 요청 받음');
-  BoardContents.find({}).exec((err,results) => {
-    if(err) throw err;
-    res.render('index.html',results);
-  })
-});
-*/
 router.get('/dataGet', function(req,res){
   console.log('ajax 요청 받음(dataget)');
   BoardContents.find({}).exec((err,results) => {
@@ -93,11 +85,19 @@ router.post('/ajax/read/:_id', function(req, res){
 
 router.post('/ajax/write', function(req, res){
   console.log('ajax 글쓰기 요청');
-  var data = {
-    'name' : 'nanana',
-    'age' : '1234'
-  }
-  res.json(data);
+  console.log(req.body);
+  let newtext = new BoardContents({
+    title : req.body.title,
+    author : req.body.author,
+    contents : req.body.content
+  });
+  newtext.save((err, result) => {
+    if(err){
+      console.error(err);
+      return res.status(500).json({ message : '글쓰기오류'});
+    }
+    return res.json(req.body);
+  });
 });
 
 module.exports = router;
