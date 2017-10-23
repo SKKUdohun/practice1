@@ -45,8 +45,8 @@ router.get('/read/:_id', function(req, res){
 
     res.render('readejs2',{ Data : result });
   });
-
 });
+
 
 router.get('/write', function(req, res){
   res.sendFile('write.html', {root : VIEWS });
@@ -69,16 +69,26 @@ router.post('/write', (req,res) =>{
 });
 
 router.get('/ajax',function(req, res){
-  res.render('index.html');
+  res.render('index2.html');
 });
 
 router.get('/ajax/contentGet', function(req,res){
-  console.log('요청받음');
+  console.log('contentGet 요청받음');
   BoardContents.find({}).exec((err,results) => {
     if(err) throw err;
     //console.log(results);
     res.json(results);
   })
+});
+
+router.post('/ajax/read/:_id', function(req, res){
+  console.log('ajax 글읽기 요청')
+    BoardContents.find({_id:req.params._id}).exec((err,result) =>{
+        console.log('체크'+result);
+        if(err) throw err;
+
+        res.json(result);
+    });
 });
 
 module.exports = router;
